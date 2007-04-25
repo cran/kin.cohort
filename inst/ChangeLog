@@ -1,0 +1,10 @@
+v03 
+
+30Nov06
+- plot.kin.cohort has new argument add to overlay plots
+
+12Oct06
+- kc.marginal will accept relatives (r) codes 0 & 3 for probands and offspring. Probands will be excluded and offspring recoded to 1.
+
+01Oct06
+- added functions for simulating cohort and case-control family studies
