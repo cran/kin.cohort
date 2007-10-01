@@ -28,7 +28,7 @@ cat("Carriers:    ", T[2,2], "(",P[2,2]," %)\n")
 
 nrel <- sum(!probands)
 cancer   <- object$cancer[!probands]==1
-carrier  <- object$carrier[!probands]==1
+carrier  <- object$real.carrier[!probands]==1
 
 cat("\n\nRelatives: ", nrel,"\n")
 cat("Affected relatives: ",sum(cancer), "(",formatC(sum(cancer )/nrel*100,1,format="f"),"%)\n")

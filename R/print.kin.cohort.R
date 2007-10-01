@@ -24,6 +24,10 @@ function(x,descriptive=TRUE, cumrisk=TRUE,hazard=FALSE,survival=FALSE, logrank=T
         cat("\nAverage Hazard Ratio\n")
         print(round(exp(x$logHR),digits))
      }
+     if(logrank &!is.null(x$logrank)){
+        cat("\nLogrank test p-value\n")
+        print(signif(x$logrank, 2))
+     }
    }
    if(inherits(x,"wacholder")){
      cat("\nWacholder Moments method\n")
@@ -41,7 +45,7 @@ function(x,descriptive=TRUE, cumrisk=TRUE,hazard=FALSE,survival=FALSE, logrank=T
         print(round(1-x$cumrisk[,1:2],digits))
      }
      if(logrank &!is.na(x$logrank)){
-        cat("\nLogrank test p-value=", format(signif(x$logrank, digits)),"\n")
+        cat("\nLogrank test p-value=", format(signif(x$logrank, 2)),"\n")
      }
   }
 }

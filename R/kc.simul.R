@@ -60,15 +60,13 @@ ages[ages>105]<-105
 # depend on carrier, rel, p [cp1exact]
 p.carrier<-sapply(rel,FUN=function(r, carrier,p){
    q<-1-p
-   ifelse(carrier==0, #non carrier
+   ifelse(carrier==0, 			#non carrier
       ifelse(r==2,
-         (1/4)*p^2+(1/2)*p*(1+q),
-         p
-      ),           #carrier
+         (1/4)*p^2+(1/2)*p*(1+q), 
+         p),          			 #carrier
       ifelse(r==2,
-         ((1/4)*p^2*(1+p)^2 + p^2*q*(1+p)+p*q*(1+p*q))/(p^2+2*p*q) ,
-          p*(1+p*q)/(p^2+2*p*q)
-      )
+         ((1/4)*p^2*(1+p)^2 + p^2*q*(1+p)+p*q*(1+p*q))/(p^2+2*p*q),  
+         p*(1+p*q)/(p^2+2*p*q) )
    )}, carrier, p )
 
 

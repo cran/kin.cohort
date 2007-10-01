@@ -1,3 +1,31 @@
+v05
+
+28Sep07
+Bug fixed: summary.kin.cohort.sample calculated wrong the relative carrier proportion
+Bug fixed: kc.moments was using rel instead of r for filtering relatives
+
+07May07
+Bug fixed: kc.marginal, print.kin.cohort.boot, plot.kin.cohort.boot Bootstrap CI were wrong if 2 genes. Plots remain pending in this case.
+
+03May07
+added NAMESPACE
+
+Bug fixed: warnings call.=FALSE
+New feature: logrank test added to the marginal method also
+
+v04
+26Dec06
+Bugs fixed in plots
+
+06Dec06
+Added functionality for 2nd degree relatives (grandparents / aunts&oncles)
+changed functions to compute gene-share probabilities
+
+Added preliminary compatibility for codominant model
+
+16Dec06
+Bug fixed in kc.moments
+
 v03 
 
 30Nov06

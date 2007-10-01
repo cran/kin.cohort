@@ -4,7 +4,7 @@
 \title{ Analysis of kin-cohort data }
 \description{
 This function estimates cumulative risk at given ages for carriers and noncarriers
-of a mutation based on the proband´s genotypes. It can use the Marginal Maximum
+of a mutation based on the probands genotypes. It can use the Marginal Maximum
 Likelihood estimation method (Chatterjee and Wacholder, 2001) or the method of
 moments (Wacholder et al, 2001). Bootstrap confidence intervals can be requested.
 }

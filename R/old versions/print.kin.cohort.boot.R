@@ -1,5 +1,5 @@
 `print.kin.cohort.boot` <-
-function(x, cumrisk = TRUE, hazard = FALSE, HR=TRUE, conf = 0.95, digits=5, show=TRUE, logrank=TRUE, ...){
+function(x, cumrisk = TRUE, hazard = TRUE, HR=TRUE, conf = 0.95, digits=5, show=TRUE, logrank=TRUE, ...){
   if (!inherits(x,"kin.cohort.boot")) stop("Object should be class kin.cohort.boot")
 
   boot.ci<-function (t, conf )
@@ -43,16 +43,11 @@ if (show){
    if(inherits(x,"chatterjee")) cat("\nMarginal Likelihood method\n")
 }
 
-ncateg<-ifelse(is.list(x$cumrisk),2,4)
+g0.lab<-colnames(e$cumrisk)[1:2]
 
 #
 # cumulative risk
 #
-
-if (ncateg==2){
-
-  g0.lab<-colnames(e$cumrisk)[1:2]
-
   pco<-x$cumrisk$Noncarrier
   pca<-x$cumrisk$Carrier
   pcr<-x$cumrisk$"C.R.R."
@@ -78,7 +73,7 @@ if(cumrisk & show){
   cat("\nCumulative risk\n")
   print(round(o.cr,digits) )
 }
-out<-list(cumrisk=o.cr, knots=e$knots, ncateg=ncateg)
+out<-list(cumrisk=o.cr, knots=e$knots)
 
 #
 # hazard
@@ -106,66 +101,25 @@ if(inherits(x,"chatterjee")){
 	                 g0.lab[2],"med boot","(95%","C.I.)",
 	                 "Hazard Ratio","med boot","(95%","C.I.)")
 	rownames(o.hz)<-rownames(e$hazard)
-
+  
 	if(hazard & show){
 	  cat("\nHazard\n")
 	  print(round(o.hz,digits) )
 	}
+	if(HR){
+     lim.logHR<-t(sapply(1:ncol(x$logHR),function(i)boot.ci(x$logHR[,i], conf)))
+     med.logHR<-apply(x$logHR, 2, median)
 
-   out<-list(cumrisk=o.cr, hazard=o.hz, knots=e$knots, ncateg=ncateg)
-}
-
-} else { # 2 genes 4 categories
-########################################################################
-#
-  cr<-x$cumrisk
-  dcr<-dim(cr) # ages x groups x B
-  crb<-array(NA, c(dcr[1],4, dcr[2])) # last dimension= median, lo, hi
-
-  for (i in 1:dcr[2]) # groups (7)
-     crb[,,i]<-t(sapply(1:dcr[1],function(x)c(e$cumrisk[x,i],median(cr[x,i,]),boot.ci(cr[x,i,], conf))))
-  dimnames(crb)<-list(ages=rownames(x$estimate$cumrisk), c("Estimate","med boot","(95%","C.I.)"), group=colnames(x$estimate$cumrisk) )
-
-if(cumrisk & show){
-  cat("\nCumulative risk\n")
-  print(round(crb,digits) )
-}
-out<-list(cumrisk=crb, knots=e$knots, ncateg=ncateg)
-
-#
-# hazard
-#
-if(inherits(x,"chatterjee")){
-
-  hz<-x$hazard
-  dhz<-dim(hz)
-  hzb<-array(NA, c(dhz[1],4, dhz[2])) # last dimension= median, lo, hi
-
-  for (i in 1:dhz[2]) # groups (7)
-     hzb[,,i]<-t(sapply(1:dhz[1],function(x)c(e$cumrisk[x,i],median(hz[x,i,]),boot.ci(hz[x,i,], conf))))
-  dimnames(hzb)<-list(ages=rownames(x$estimate$hazard), c("Estimate","med boot","(95%","C.I.)"), group=colnames(x$estimate$hazard) )
-
-	if(hazard & show){
-	  cat("\nHazard\n")
-	  print(round(hzb,digits) )
+	  logHR<-cbind(e$logHR, med.logHR, lim.logHR)
+	  colnames(logHR)<-c("HR","med boot","(95%","C.I.)")
+	  rownames(logHR)<-names(e$logHR)
+	  if(show){
+		  cat("\nAverage Hazard Ratio\n")
+		  print(round(exp(logHR),digits))
+ 	  }	
 	}
-   out<-list(cumrisk=crb, hazard=hzb, knots=e$knots, ncateg=ncateg)
-}
-}
 
-# HR
-
-if(HR & inherits(x,"chatterjee")){
-  lim.logHR<-t(sapply(1:ncol(x$logHR),function(i)boot.ci(x$logHR[,i], conf)))
-  med.logHR<-apply(x$logHR, 2, median)
-
-  logHR<-cbind(e$logHR, med.logHR, lim.logHR)
-  colnames(logHR)<-c("HR","med boot","(95%","C.I.)")
-  rownames(logHR)<-names(e$logHR)
-  if(show){
-	  cat("\nAverage Hazard Ratio\n")
-	  print(round(exp(logHR),digits))
-  }
+   out<-list(cumrisk=o.cr,hazard=o.hz,knots=e$knots)
 }
 
 if(logrank & show & !is.null(e$logrank)){

@@ -1,0 +1,8 @@
+import( survival)
+export( "kin.cohort", "kc.moments", "kc.marginal", "kc.simul", "sample.caco")
+
+S3method( "print", "kin.cohort")
+S3method( "print", "kin.cohort.boot")
+S3method( "plot", "kin.cohort")
+S3method( "plot", "kin.cohort.boot")
+S3method( "summary", "kin.cohort.sample")

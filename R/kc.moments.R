@@ -1,5 +1,5 @@
 `kc.moments` <-
-function(t, delta, genes, r=NULL, knots, f, pw=rep(1,length(t)), set=NULL, B=1, logrank=TRUE, subset){
+function(t, delta, genes, r, knots, f, pw=rep(1,length(t)), set=NULL, B=1, logrank=TRUE, subset, trace=FALSE){
 #
 # function for kin-cohort cumulative risk estimation.
 # method by Wacholder et al. AJE 1998; 148: 632-9
@@ -12,7 +12,7 @@ function(t, delta, genes, r=NULL, knots, f, pw=rep(1,length(t)), set=NULL, B=1, 
 #      f = allele frequency of mutation
 #     pw = prior weights for relatives (assume 1 if no weights are needed)
 #
-#      r = relative type (not used)
+#      r = relative type (only used to filter relatives from data)
 #    set = family indicator (not used)
 #      B = bootstrap samples (not used)
 
@@ -27,15 +27,15 @@ if (length(f)!=1 | dim(data.frame(genes))[2]!=1) stop("Only one gene supported f
     if (any(rel.codes)>3 | any(rel.codes)<0)
         stop("Code relatives 0:proband (ignored here) 1:parents 2:siblings 3:offspring (recoded to 1)")
 
-    rel[rel==3]<-1   # pool parents & descendents
-                     # could extend to 2nd-3rd degree relatives
+    r[r==3]<-1   # pool parents & descendents
+                 # could extend to 2nd-3rd degree relatives
 
-    if (any(r==0)) warning("Probands excluded from this analysis", .call=FALSE)
-    if (any(r>3))  warning("Second degree relatives excluded from this analysis", .call=FALSE)
+    if (any(r==0)) warning("Probands excluded from this analysis", call.=FALSE)
+    if (any(r>3))  warning("Second degree relatives excluded from this analysis", call.=FALSE)
 
 valid<- complete.cases(t, delta, genes, r, pw)
   if (sum(valid) != length(t) | !missing(subset) | any(r==0) | any(r>3))  {
-  if (sum(valid) != length(t)) warning("Some cases excluded because of missing values", .call=FALSE)
+  if (sum(valid) != length(t)) warning("Some cases excluded because of missing values", call.=FALSE)
   if(!missing(subset)) valid<-valid & subset
   valid<-valid & r!=0 & r<=3 # exlude probands & 2nd D rel
   t<- t[valid]
@@ -48,23 +48,23 @@ valid<- complete.cases(t, delta, genes, r, pw)
 
 # genotype checks
 	if (!is.factor(genes)){
-		warning("Genotypes better specified as factor. Levels assigned, check adequacy", .call=FALSE)
+		warning("Genotypes better specified as factor. Levels assigned, check adequacy", call.=FALSE)
 		genes<-factor(genes)
 		if (length(unique(genes))==3) {
- 		    warning("3r genotype collapsed with 2nd", .call=FALSE)
+ 		    warning("3r genotype collapsed with 2nd", call.=FALSE)
  		    genes[genes==levels(genes)[3]]<-levels(genes)[2]
  		    }
 		if (length(unique(genes))==2) levels(genes) <- c("Noncarrier","Carrier")
 		else stop("something wrong with genotypes")
 	} else if (length(unique(genes))==3) {
- 		    warning("3r genotype collapsed with 2nd", .call=FALSE)
+ 		    warning("3r genotype collapsed with 2nd", call.=FALSE)
  		    genes[genes==levels(genes)[3]]<-levels(genes)[2]
  		    levels(genes)[2]<-paste(levels(genes)[2:3],collapse="+")
  		    genes<-factor(genes)
 	}
 	fr <- table(genes)
 	if (fr[2]>fr[1]){
-      warning("Non carriers should be coded first!, reordered, check labels", .call=FALSE)
+      warning("Non carriers should be coded first!, reordered, check labels", call.=FALSE)
       genes<-relevel(genes,2)
    }
 
@@ -157,6 +157,13 @@ if (B>1) {
 	
 	i<-1
 	while (i<=B){
+
+      if (trace){
+        if (i==1) cat("Sample: ")
+        if (i %% 10==0) cat(i," ")
+        if (i==B) cat("\n")
+      }
+
 	   s<- sample(1:nfamily, replace=TRUE)
 	   index_s <- NULL
 	   for (j in 1:nfamily){

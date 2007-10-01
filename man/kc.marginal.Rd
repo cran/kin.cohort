@@ -3,11 +3,12 @@
 
 \title{Marginal Maximum Likelihood estimation of kin-cohort data }
 \description{
-This function estimates cumulative risk and hazard at given ages for carriers and noncarriers of a mutation based on the proband´s genotypes. It uses the Marginal Maximum Likelihood estimation method (Chatterjee and Wacholder, 2001). Piece-wise exponential distribution is assumed for the survival function.
+This function estimates cumulative risk and hazard at given ages for carriers and noncarriers of a mutation based on the probands genotypes. It uses the Marginal Maximum Likelihood estimation method (Chatterjee and Wacholder, 2001). Piece-wise exponential distribution is assumed for the survival function.
 }
 \usage{
 kc.marginal(t, delta, genes, r, knots, f, pw = rep(1,length(t)), 
-            set = NULL, B = 1, maxit = 1000, tol = 1e-5, subset)
+            set = NULL, B = 1, maxit = 1000, tol = 1e-5, subset,
+            logrank=TRUE, trace=FALSE)
 }
 \arguments{
   \item{t}{ time variable. Usually age at diagnosis or at last follow-up }
@@ -22,6 +23,8 @@ kc.marginal(t, delta, genes, r, knots, f, pw = rep(1,length(t)),
   \item{maxit}{ max number of iterations for the EM algorithm }
   \item{tol}{ convergence tolerance }
   \item{subset}{logical condition to subset data}
+  \item{logrank}{Perform a logrank test}
+  \item{trace}{Show iterations for bootstrap}
 }
 
 \value{
@@ -34,6 +37,7 @@ kc.marginal(t, delta, genes, r, knots, f, pw = rep(1,length(t)),
   \item{ngeno.rel}{number of combinations of genotypes in the relatives}
   \item{events}{matrix with number of events and person years per each knot}
   \item{logHR}{mean log hazard ratio estimate (unweighted)}
+  \item{logrank}{logrank test. If 2 genes, for the main effects, the cross-classification and the stratified tests}
   \item{call}{copy of call}
 
   if bootstrap confidence intervals are requested (B>1) then the returned object is of classes "kin.cohort.boot" and "chatterjee" with previous items packed in value estimate and each bootstrap sample packed in matrices. 

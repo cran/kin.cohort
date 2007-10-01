@@ -1,0 +1,12 @@
+Pending bugs
+
+- plot.kin.cohort.boot Bootstrap CI wrong if 2 genes
+
+
+ToDo
+
+- Change method for bootstrap CI
+
+- Implement methods in Chaterjee et al Biometrics 2006
+- Write a user guide
+

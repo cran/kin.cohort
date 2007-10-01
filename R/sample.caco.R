@@ -23,7 +23,7 @@ if (p.cases < 1)
 else if (p.cases >1) {
    if (ncases > p.cases) {
      ncases <- p.cases
-     warning(paste ("A max of ",ncases, "will be used"))
+     warning(paste ("A max of ",ncases, "will be used"), call.=FALSE)
    }
 }
 
@@ -36,7 +36,7 @@ maxcontrols<-length(controls)
 ncontrols <- round(ncases*caco.ratio)
 if (ncontrols>maxcontrols){
   ncontrols <- maxcontrols
-  warning(paste ("A max of ",maxcontrols, "will be used"))
+  warning(paste ("A max of ",maxcontrols, "will be used"), call.=FALSE)
 }
 
 # random sample (no matching)

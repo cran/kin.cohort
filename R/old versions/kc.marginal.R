@@ -1,5 +1,5 @@
 `kc.marginal` <-
-function(t, delta, genes, r, knots, f, pw=rep(1,length(t)), set=NULL, B=1, maxit=1000, tol=1e-5, subset, logrank=TRUE, trace=FALSE){
+function(t, delta, genes, r, knots, f, pw=rep(1,length(t)), set=NULL, B=1, maxit=1000, tol=1e-5, subset, logrank=TRUE){
 #
 # function for kin-cohort cumulative risk estimation.
 # Piecewise exponential models are used for survial function.
@@ -136,23 +136,23 @@ haz.nam<- apply( cbind(c("<",rep("[",nk-1)), apply(haz.nam,1,paste,collapse="") 
 dpy <- pyear(t,delta,knots)
 d<-dpy$d
 py<-dpy$py
-events<- apply(d*pw,2,sum)
+events<- apply(d*pw,2,sum) 
+events<-c(events,NA,sum(events))
 p.years<- apply(py*pw,2,sum)
-p.years<-c(p.years,NA,sum(p.years), round(sum(events)/sum(p.years)*100000,1)) # don't reorder !!
-events<-c(events,NA,sum(events), NA)
+p.years<-c(p.years,NA,sum(p.years))
 epy<- cbind(events, p.years)
 
 for (i in 1:ngeno.rel) {
    filter<-(g0.rel==i)
 	events<-apply(d[filter,]*pw[filter],2,sum) 
+   events<-c(events,NA,sum(events))
 	p.years<- apply(py[filter,]*pw[filter],2,sum)
-   p.years<-c(p.years,NA,sum(p.years), round(sum(events)/sum(p.years)*100000,1))
-   events<-c(events,NA,sum(events), NA)
+   p.years<-c(p.years,NA,sum(p.years))
 	epy0<- cbind(events, p.years)
 	colnames(epy0)[1]<-g0.lab[i]
 	epy<- cbind(epy, epy0)
 }
-rownames(epy)<-c(haz.nam, paste(knots[nk],"+"),"","Total","x10e5 py")
+rownames(epy)<-c(haz.nam, paste(knots[nk],"+"),"","Total")
 
 # table of carrier probabilities for relative conditional on proband
 
@@ -187,7 +187,7 @@ tp <- mendelian.combine(f  ,c(length(lev[[1]]), length(lev[[2]])), c(2,2)) # dom
 ########################################################
 # Bootstrap starts here
 #
-marginal <- function(t, delta, g0, r, pw, tp, knots, nk, nknots, ngenes, ngeno.pro, ngeno.rel ) {
+marginal <- function(t, delta, g0, r, pw, tp, knots, nk, nknots, ngeno.pro, ngeno.rel ) {
 
 
 nobs<- length(t)
@@ -311,7 +311,7 @@ list(cumrisk=s, hazard=h, conv=conv, niter=niter, logHR=logHR)
 } # marginal (bootstrap)
 ###################################################################
 
-b.orig <- marginal(t, delta, g0, r, pw, tp, knots, nk, nknots, ngenes, ngeno.pro, ngeno.rel )
+b.orig <- marginal(t, delta, g0, r, pw, tp, knots, nk, nknots, ngeno.pro, ngeno.rel )
 
 o<-list(cumrisk=b.orig$cumrisk, hazard=b.orig$hazard, knots=knots, conv=b.orig$conv, niter=b.orig$niter, ngeno.rel=ngeno.rel, events=epy, logHR=b.orig$logHR, f=f, call=cl, logrank=lr )
 class(o)<-c("kin.cohort","chatterjee")
@@ -322,14 +322,7 @@ if (B>1){
 	id<- unique(set)
 	nfamily<- length(id)
 	
-   if( ngenes == 1 ){
-      s1 <- s2 <- sr<- h1 <- h2 <- hr<- matrix(0,B,nk)
-      #   sb <- hb <- array(0,c(B,nk,3))
-   } else {
-      #	s1 <- s2 <- s3 <- s4 <- sr2<- sr3<- sr4<- h1 <- h2 <- h3 <- h4 <- hr2<- hr3<- hr4<-  matrix(0,B,nk)
-      sb <- hb <-array(0,c(nk,7,B))
-   }
- 
+	s1 <- s2 <- sr<- h1 <- h2 <- hr<- matrix(0,B,nk)
 	logHR <- matrix(0,B,ngeno.rel-1)
 	
 	x<- matrix(NA,nfamily,max(table(set)))
@@ -340,12 +333,6 @@ if (B>1){
 	
 	i<-1
 	while (i<=B){
-
-      if (trace){
-        if (i==1) cat("Sample: ")
-        if (i %% 10==0) cat(i," ")
-        if (i==B) cat("\n")
-      }
 	   s<- sample(1:nfamily, replace=TRUE) 
 	   index_s <- NULL
 	   for (j in 1:nfamily){
@@ -360,39 +347,31 @@ if (B>1){
 	   set_s=set[index_s]
 	   pw_s=pw[index_s]
 	
-	   b<-marginal(t_s, delta_s, g0_s, r_s, pw_s, tp, knots, nk, nknots, ngenes, ngeno.pro, ngeno.rel )
+	   b<-marginal(t_s, delta_s, g0_s, r_s, pw_s, tp, knots, nk, nknots, ngeno.pro, ngeno.rel )
+ if( length(tp) ==1 ){
+	   s1[i,]<- b$cumrisk[,1]
+	   s2[i,]<- b$cumrisk[,2]
+	   sr[i,]<- b$cumrisk[,3]
+	   h1[i,]<- b$hazard[,1]
+	   h2[i,]<- b$hazard[,2]
+	   hr[i,]<- b$hazard[,3]
+} else {
 
-      if( ngenes == 1 ){
-         s1[i,]<- b$cumrisk[,1]
-         s2[i,]<- b$cumrisk[,2]
-         sr[i,]<- b$cumrisk[,3]
-         h1[i,]<- b$hazard[,1]
-         h2[i,]<- b$hazard[,2]
-         hr[i,]<- b$hazard[,3]
-      } else {
-         sb[,,i] <- b$cumrisk
-         hb[,,i] <- b$hazard
-      }
+}
       logHR[i,]<- b$logHR
       
 	   i<-i+1
 	}
-
-   if( ngenes == 1 ){
-   	colnames(s1)<-rownames(b$cumrisk)
-   	colnames(s2)<-rownames(b$cumrisk)
-   	colnames(sr)<-rownames(b$cumrisk)
-   	colnames(h1)<-rownames(b$hazard)
-   	colnames(h2)<-rownames(b$hazard)
-   	colnames(hr)<-rownames(b$hazard)
-   	sb<- list(Noncarrier=s1,Carrier=s2,"C.R.R."=sr)
-   	hb<- list(Noncarrier=h1,Carrier=h2,"H.R."=hr)
-	}
-
-
+	
+	colnames(s1)<-rownames(b$cumrisk)
+	colnames(s2)<-rownames(b$cumrisk)
+	colnames(sr)<-rownames(b$cumrisk)
+	colnames(h1)<-rownames(b$hazard)
+	colnames(h2)<-rownames(b$hazard)
+	colnames(hr)<-rownames(b$hazard)
 	colnames(logHR)<-names(b$logHR)
 	
-   o<-list(cumrisk=sb,hazard=hb, logHR=logHR ,estimate=o)
+	o<-list(cumrisk=list(Noncarrier=s1,Carrier=s2,"C.R.R."=sr),hazard=list(Noncarrier=h1,Carrier=h2,"H.R."=hr), logHR=logHR ,estimate=o)
 	class(o)<-c("kin.cohort.boot","chatterjee")
 
 } # bootstrap

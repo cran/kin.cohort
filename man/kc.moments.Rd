@@ -3,11 +3,11 @@
 
 \title{ Kin-cohort estimation of penetrance by the method of moments }
 \description{
-This function estimates cumulative risk and hazard at given ages for carriers and noncarriers of a mutation based on the proband´s genotypes. It uses the method of moments described by Wacholder et al (1998)
+This function estimates cumulative risk and hazard at given ages for carriers and noncarriers of a mutation based on the probands genotypes. It uses the method of moments described by Wacholder et al (1998)
 }
 \usage{
-kc.moments(t, delta, genes, r = NULL, knots, f, pw = rep(1,length(t)), 
-           set = NULL, B = 1, logrank = TRUE, subset)
+kc.moments(t, delta, genes, r, knots, f, pw = rep(1,length(t)), 
+           set = NULL, B = 1, logrank = TRUE, subset, trace=FALSE)
 }
 
 \arguments{
@@ -22,6 +22,7 @@ kc.moments(t, delta, genes, r = NULL, knots, f, pw = rep(1,length(t)),
   \item{B}{ number of boostrap samples (only needed for bootstrap) }
   \item{logrank}{ if logrank test is desired }
   \item{subset}{logical condition to subset data}
+  \item{trace}{Show iterations for bootstrap}
 }
 
 \value{
