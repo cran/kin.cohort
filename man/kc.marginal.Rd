@@ -1,7 +1,6 @@
 \name{kc.marginal}
 \alias{kc.marginal}
-
-\title{Marginal Maximum Likelihood estimation of kin-cohort data }
+\title{ Marginal Maximum Likelihood estimation of kin-cohort data }
 \description{
 This function estimates cumulative risk and hazard at given ages for carriers and noncarriers of a mutation based on the probands genotypes. It uses the Marginal Maximum Likelihood estimation method (Chatterjee and Wacholder, 2001). Piece-wise exponential distribution is assumed for the survival function.
 }
@@ -22,17 +21,17 @@ kc.marginal(t, delta, genes, r, knots, f, pw = rep(1,length(t)),
   \item{B}{ number of boostrap samples (only needed for bootstrap) }
   \item{maxit}{ max number of iterations for the EM algorithm }
   \item{tol}{ convergence tolerance }
-  \item{subset}{logical condition to subset data}
-  \item{logrank}{Perform a logrank test}
-  \item{trace}{Show iterations for bootstrap}
+  \item{subset}{ logical condition to subset data }
+  \item{logrank}{ Perform a logrank test }
+  \item{trace}{ Show iterations for bootstrap }
 }
 
 \value{
   object of classes "kin.cohort" and "chatterjee". 
   \item{cumrisk }{matrix with cumulative risk estimates for noncarriers, carriers and the cumulative risk ratio. Estimates are given for the times indicated in the knot vector}
   \item{hazard }{matrix with hazard estimates for noncarriers, carriers and the hazard ratio. Estimates are given for the times indicated in the knot vector}
-  \item{knots} {vector of knots}
-  \item{conv} {if the EM algorithm converged}
+  \item{knots}{vector of knots}
+  \item{conv}{if the EM algorithm converged}
   \item{niter}{number of iterations needed for convergence}
   \item{ngeno.rel}{number of combinations of genotypes in the relatives}
   \item{events}{matrix with number of events and person years per each knot}

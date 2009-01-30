@@ -14,23 +14,23 @@ kc.moments(t, delta, genes, r, knots, f, pw = rep(1,length(t)),
   \item{t}{ time variable. Usually age at diagnosis or at last follow-up }
   \item{delta}{ disease status (1: event, 0: no event }
   \item{genes}{ genotype of proband numeric. A factor is preferred, otherwise numeric code of genotypes (1: noncarrier, 2:carrier, [3: homozygous carrier]) }
-  \item{r}{relationship with proband 1:parent, 2:sibling 3:offspring 0:proband. Probands will be excluded from analysis and offspring will be recoded 1 internally. }
+  \item{r}{ relationship with proband 1:parent, 2:sibling 3:offspring 0:proband. Probands will be excluded from analysis and offspring will be recoded 1 internally. }
   \item{knots}{ time points (ages) for cumulative risk and hazard estimates }
   \item{f}{ mutation allele frequency in the population }
   \item{pw}{ prior weights, if needed }
-  \item{set}{ family id (only needed for bootstrap)   }
+  \item{set}{ family id (only needed for bootstrap) }
   \item{B}{ number of boostrap samples (only needed for bootstrap) }
   \item{logrank}{ if logrank test is desired }
-  \item{subset}{logical condition to subset data}
-  \item{trace}{Show iterations for bootstrap}
+  \item{subset}{ logical condition to subset data }
+  \item{trace}{ Show iterations for bootstrap }
 }
 
 \value{
   object of classes "kin.cohort" and "wacholder". 
-  \item{cumrisk }{matrix of dimension (number of knots x 3) with cumulative risk festimates or noncarriers, carriers and the cumulative risk ratio}
-  \item{knots} {vector of knots}
-  \item{km} { object class survfit (package survival) }
-  \item{logrank} {p-value of the logrank test}  
+  \item{cumrisk}{matrix of dimension (number of knots x 3) with cumulative risk festimates or noncarriers, carriers and the cumulative risk ratio}
+  \item{knots}{vector of knots}
+  \item{km}{object class survfit (package survival) }
+  \item{logrank}{p-value of the logrank test}  
   \item{events}{matrix with number of events and person years per each knot}
   \item{call}{copy of call}
 
