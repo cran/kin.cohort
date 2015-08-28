@@ -72,7 +72,7 @@ Currently, only one gene and one disease are simulated.
 
 }
 \examples{
-
+\dontrun{
 set.seed(7)
 ## cohort 
 s<-kc.simul(4000, f=0.03, hr=5)
@@ -107,7 +107,7 @@ print(exp(coef(r.caco)[2]))
 ## probands only
 p.caco<- glm(cancer~carrier, family=binomial, data=s.cc, subset=(s.cc$rel==0))
 print(exp(coef(p.caco)[2]))
-
+}
 }
 
 \keyword{survival}

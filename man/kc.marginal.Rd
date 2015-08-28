@@ -51,9 +51,11 @@ This function is best called by kin.cohort than directly
 \code{\link{kin.cohort}}, \code{\link{print.kin.cohort}}, \code{\link{plot.kin.cohort}} 
 }
 \examples{
+\dontrun{
 data(kin.data)
 attach(kin.data)
 res.mml<- kc.marginal(age, cancer, gen1, rel, knots=c(30,40,50,60,70,80), f=0.02)
 res.mml
+}
 }
 \keyword{survival}

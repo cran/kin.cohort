@@ -35,6 +35,7 @@ Maintainer: Victor Moreno <v.moreno@iconcologia.net>
 \code{\link{kc.marginal}}, \code{\link{kc.moments}} 
 }
 \examples{
+\dontrun{
 data(kin.data)
 attach(kin.data)
 
@@ -69,5 +70,6 @@ res.m.b<- kin.cohort(age, cancer, gen1, rel, knots=c(30,40,50,60,70,80), f=0.02,
 res.m.b
 plot(res.m.b)
 plot(res.m.b, what="hr")
+}
 }
 \keyword{survival}

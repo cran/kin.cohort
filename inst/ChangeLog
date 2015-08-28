@@ -1,4 +1,10 @@
+v07
+
+15Aug15
+added to NAMESPACE importFrom
+
 v06
+
 29Jan09
 Docs fixes to avoid warnings with R 2.8.1
 
@@ -18,6 +24,7 @@ Bug fixed: warnings call.=FALSE
 New feature: logrank test added to the marginal method also
 
 v04
+
 26Dec06
 Bugs fixed in plots
 
